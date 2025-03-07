@@ -6,7 +6,7 @@ const p = path.join(dirPath, "data", "cart.json");
 
 const getCartFromFile = (callback) => {
   fs.readFile(p, (err, fileContent) => {
-    let cart = { products: [], totalprice: 0 };
+    let cart = { products: [], totalPrice: 0 };
     if (!err && fileContent.length > 0) {
       try {
         cart = JSON.parse(fileContent);
@@ -39,7 +39,8 @@ module.exports = class Product {
         cart.products.push(updatedProduct);
       }
 
-      cart.totalprice += Number(productPrice);
+      cart.totalPrice =
+        Math.round((cart.totalPrice + Number(productPrice)) * 100) / 100;
 
       fs.writeFile(p, JSON.stringify(cart), (err) => {
         if (err) console.log("Error writing to cart file:", err);
@@ -68,7 +69,7 @@ module.exports = class Product {
         cart.products.splice(existingItemIndex, 1);
       }
 
-      cart.totalprice = Math.max(0, cart.totalprice - Number(productPrice));
+      cart.totalPrice = Math.max(0, cart.totalPrice - Number(productPrice));
 
       fs.writeFile(p, JSON.stringify(cart), (err) => {
         if (err) console.log("Error deleting product from cart", err);
@@ -80,9 +81,16 @@ module.exports = class Product {
     getCartFromFile((cart) => {
       if (id) {
         const productToDelete = cart.products.find((prod) => prod.id == id);
-        const priceToDelete = price * productToDelete.qty;
+        if (!productToDelete) {
+          return;
+        }
+        const priceToDelete = Number(price) * productToDelete.qty;
+
         const updatedProducts = cart.products.filter((prod) => prod.id !== id);
-        const updatedPrice = Math.max(0, cart.totalprice - priceToDelete);
+        const updatedPrice = Math.max(
+          0,
+          Number(cart.totalPrice) - priceToDelete
+        );
 
         fs.writeFile(
           p,
