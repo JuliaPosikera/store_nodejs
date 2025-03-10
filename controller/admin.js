@@ -45,8 +45,14 @@ exports.postProduct = (req, res) => {
     req.body.description,
     req.body.price
   );
-  product.save();
-  res.redirect("/admin/products");
+  product
+    .save()
+    .then(() => {
+      res.redirect("/admin/products");
+    })
+    .catch((error) => {
+      console.log("Save new product error" + error);
+    });
 };
 
 exports.postEditProduct = (req, res) => {
@@ -62,13 +68,25 @@ exports.postEditProduct = (req, res) => {
     updatedDesc,
     updatedPrice
   );
-  updatedProduct.save();
-
-  res.redirect("/admin/products");
+  updatedProduct
+    .update()
+    .then(() => {
+      res.redirect("/admin/products");
+    })
+    .catch((error) => {
+      console.log("Save new product error" + error);
+    });
 };
 
 exports.deleteProduct = (req, res) => {
   const productID = req.body.prodId;
-  Product.delete(productID);
-  res.redirect("/admin/products");
+  Product.delete(productID)
+    .then(() => {
+      res.redirect("/admin/products");
+    })
+    .catch((error) => {
+      console.log(
+        `Error deleting product with id= ${productID} from database` + error
+      );
+    });
 };

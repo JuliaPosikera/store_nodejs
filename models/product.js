@@ -1,20 +1,5 @@
-const fs = require("fs");
-const path = require("path");
-const dirPath = require("../util/path");
+const db = require("../util/database");
 const Cart = require("./cart");
-
-const p = path.join(dirPath, "data", "products.json");
-const getProductsFromFile = (callback) => {
-  fs.readFile(p, (err, fileContent) => {
-    let products = [];
-    if (!err) {
-      products = JSON.parse(fileContent);
-      return callback(products, p);
-    }
-    return callback([], p);
-  });
-};
-
 module.exports = class Product {
   constructor(id, title, imgURL, description, price) {
     this.id = id;
@@ -25,56 +10,38 @@ module.exports = class Product {
   }
 
   save() {
-    getProductsFromFile((products) => {
-      if (this.id) {
-        const existingProductIndex = products.findIndex(
-          (prod) => prod.id === this.id
-        );
-        const updatedProducts = [...products];
-        updatedProducts[existingProductIndex] = this;
-        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
-          if (err) {
-            console.log("Error writing updated product to file:", err);
-          }
-        });
-      } else {
-        this.id = (((1 + Math.random()) * 0x10000) | 0)
-          .toString(16)
-          .substring(1);
-        products.push(this);
-        fs.writeFile(p, JSON.stringify(products), (err) => {
-          if (err) {
-            console.log("Error writing new product to file:", err);
-          }
-        });
-      }
-    });
+    return db.execute(
+      `INSERT INTO shop.products (title, price, imgURL, description) VALUES ('${this.title}', ${this.price}, '${this.imgURL}', '${this.description}');`
+    );
+  }
+
+  update() {
+    return db.execute(
+      `UPDATE shop.products SET title = '${this.title}', price = ${this.price}, imgURL = '${this.imgURL}', description = '${this.description}' WHERE (id = ${this.id});`
+    );
   }
 
   static delete(id) {
-    getProductsFromFile((products) => {
-      if (id) {
-        const updatedProducts = products.filter((prod) => prod.id !== id);
-        const price = products.find((product) => product.id == id).price;
-
-        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
-          if (err) {
-            console.log("Error writing products after deleting to file:", err);
-          }
-          Cart.deleteProductFromCart(id, price);
-        });
-      }
-    });
+    return db.execute(`DELETE FROM shop.products WHERE (id = ${id})`);
   }
 
   static fetchAll(callback) {
-    getProductsFromFile(callback);
+    db.execute("SELECT * FROM shop.products;")
+      .then((results) => {
+        callback(results[0]);
+      })
+      .catch((error) => {
+        console.log("Fetching all products data from database erroe" + error);
+      });
   }
 
   static fetchProductById(id, callback) {
-    getProductsFromFile((products) => {
-      const product = products.find((product) => product.id === id);
-      callback(product);
-    });
+    db.execute(`SELECT * FROM shop.products WHERE id=${id}`)
+      .then((results) => {
+        callback(results[0][0]);
+      })
+      .catch((error) => {
+        console.log("Fetching product by id from database error" + error);
+      });
   }
 };
