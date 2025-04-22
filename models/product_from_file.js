@@ -1,9 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const dirPath = require("../util/path");
-const Cart = require("./cart");
+const fs = require('fs');
+const path = require('path');
+const dirPath = require('../util/path');
+const Cart = require('./cart');
 
-const p = path.join(dirPath, "data", "products.json");
+const p = path.join(dirPath, 'data', 'products.json');
 const getProductsFromFile = (callback) => {
   fs.readFile(p, (err, fileContent) => {
     let products = [];
@@ -34,7 +34,7 @@ module.exports = class Product {
         updatedProducts[existingProductIndex] = this;
         fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
           if (err) {
-            console.log("Error writing updated product to file:", err);
+            console.log('Error writing updated product to file:', err);
           }
         });
       } else {
@@ -44,7 +44,7 @@ module.exports = class Product {
         products.push(this);
         fs.writeFile(p, JSON.stringify(products), (err) => {
           if (err) {
-            console.log("Error writing new product to file:", err);
+            console.log('Error writing new product to file:', err);
           }
         });
       }
@@ -59,7 +59,7 @@ module.exports = class Product {
 
         fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
           if (err) {
-            console.log("Error writing products after deleting to file:", err);
+            console.log('Error writing products after deleting to file:', err);
           }
           Cart.deleteProductFromCart(id, price);
         });

@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const dirPath = require("../util/path");
+const fs = require('fs');
+const path = require('path');
+const dirPath = require('../util/path');
 
-const p = path.join(dirPath, "data", "cart.json");
+const p = path.join(dirPath, 'data', 'cart.json');
 
 const getCartFromFile = (callback) => {
   fs.readFile(p, (err, fileContent) => {
@@ -11,7 +11,7 @@ const getCartFromFile = (callback) => {
       try {
         cart = JSON.parse(fileContent);
       } catch (e) {
-        console.log("Error parsing JSON:", e);
+        console.log('Error parsing JSON:', e);
       }
     }
     return callback(cart);
@@ -43,7 +43,7 @@ module.exports = class Product {
         Math.round((cart.totalPrice + Number(productPrice)) * 100) / 100;
 
       fs.writeFile(p, JSON.stringify(cart), (err) => {
-        if (err) console.log("Error writing to cart file:", err);
+        if (err) console.log('Error writing to cart file:', err);
       });
     });
   };
@@ -72,7 +72,7 @@ module.exports = class Product {
       cart.totalPrice = Math.max(0, cart.totalPrice - Number(productPrice));
 
       fs.writeFile(p, JSON.stringify(cart), (err) => {
-        if (err) console.log("Error deleting product from cart", err);
+        if (err) console.log('Error deleting product from cart', err);
       });
     });
   };
@@ -101,7 +101,7 @@ module.exports = class Product {
           (err) => {
             if (err) {
               console.log(
-                "Error writing products after deleting item from cart to file:",
+                'Error writing products after deleting item from cart to file:',
                 err
               );
             }

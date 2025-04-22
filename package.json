@@ -1,7 +1,7 @@
 {
   "name": "nodejs-basic",
   "version": "1.0.0",
-  "description": "first project to learn react",
+  "description": "first project to learn node",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,12 +10,23 @@
   "author": "Posikera Yuliia",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@eslint/js": "^9.24.0",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.6",
+    "globals": "^16.0.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.3"
   },
   "dependencies": {
+    "@eslint/compat": "^1.2.8",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
     "body-parser": "^1.20.3",
     "ejs": "^3.1.10",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-no-only-tests": "^3.3.0",
     "express": "^4.21.2",
-    "mysql2": "^3.13.0"
+    "mysql2": "^3.13.0",
+    "sequelize": "^6.37.7"
   }
 }

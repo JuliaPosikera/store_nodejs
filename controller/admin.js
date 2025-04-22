@@ -1,18 +1,18 @@
-const Product = require("../models/product");
+const Product = require('../models/product');
 
 exports.getAddProduct = (req, res) => {
-  res.render("admin/edit-product", {
-    pageTitle: "Add product",
-    path: "admin/add-product",
+  res.render('admin/edit-product', {
+    pageTitle: 'Add product',
+    path: 'admin/add-product',
     editing: false,
   });
 };
 
 exports.getAllProducts = (req, res) => {
   Product.fetchAll((products) => {
-    res.render("admin/products", {
-      pageTitle: "Products list",
-      path: "/admin/products",
+    res.render('admin/products', {
+      pageTitle: 'Products list',
+      path: '/admin/products',
       products: products,
     });
   });
@@ -21,17 +21,17 @@ exports.getAllProducts = (req, res) => {
 exports.getEditProduct = (req, res) => {
   const editMode = req.query.edit;
   if (!editMode) {
-    return res.redirect("/");
+    return res.redirect('/');
   }
   const productID = req.params.productId;
   Product.fetchProductById(productID, (product) => {
     if (!product) {
-      return res.redirect("/");
+      return res.redirect('/');
     }
 
-    res.render("admin/edit-product", {
-      pageTitle: "Edit product",
-      path: "admin/edit-product",
+    res.render('admin/edit-product', {
+      pageTitle: 'Edit product',
+      path: 'admin/edit-product',
       editing: editMode,
       product: product,
     });
@@ -48,10 +48,10 @@ exports.postProduct = (req, res) => {
   product
     .save()
     .then(() => {
-      res.redirect("/admin/products");
+      res.redirect('/admin/products');
     })
     .catch((error) => {
-      console.log("Save new product error" + error);
+      console.log('Save new product error' + error);
     });
 };
 
@@ -71,10 +71,10 @@ exports.postEditProduct = (req, res) => {
   updatedProduct
     .update()
     .then(() => {
-      res.redirect("/admin/products");
+      res.redirect('/admin/products');
     })
     .catch((error) => {
-      console.log("Save new product error" + error);
+      console.log('Save new product error' + error);
     });
 };
 
@@ -82,7 +82,7 @@ exports.deleteProduct = (req, res) => {
   const productID = req.body.prodId;
   Product.delete(productID)
     .then(() => {
-      res.redirect("/admin/products");
+      res.redirect('/admin/products');
     })
     .catch((error) => {
       console.log(
