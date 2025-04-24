@@ -51,25 +51,32 @@ exports.getOrders = (req, res) => {
 };
 
 exports.getProducts = (req, res) => {
-  Product.fetchAll((products) => {
-    res.render('shop/product-list', {
-      pageTitle: 'Products list',
-      path: '/products',
-      products: products,
+  Product.findAll()
+    .then((procducts) => {
+      res.render('shop/product-list', {
+        pageTitle: 'Products list',
+        path: '/products',
+        products: procducts,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.getProductDetail = (req, res) => {
   const prodId = req.params.productId;
-  Product.fetchProductById(prodId, (product) => {
-    console.log(product);
-    res.render('shop/product-detail', {
-      pageTitle: 'Product detail',
-      path: '/product-detail',
-      product: product,
+  Product.findByPk(prodId)
+    .then((product) => {
+      res.render('shop/product-detail', {
+        pageTitle: 'Product detail',
+        path: '/product-detail',
+        product: product,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.postCart = (req, res) => {

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const adminRouter = require('./routers/admins');
 const shopRouter = require('./routers/shop');
 const errorController = require('./controller/error');
+const sequelize = require('./util/database');
 
 const app = express();
 
@@ -18,7 +19,12 @@ app.use(shopRouter);
 
 app.use(errorController.get404Page);
 
-// const server = http.createServer(app);
-// server.listen(3000);
-
-app.listen(3000);
+sequelize
+  .sync()
+  .then((result) => {
+    console.log(result);
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
